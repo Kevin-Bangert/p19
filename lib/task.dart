@@ -1,5 +1,5 @@
 class Task {
-  final int? id; // ID kann null sein, wird später gesetzt
+  final int? id;
   final String title;
   final String description;
   final bool isCompleted;

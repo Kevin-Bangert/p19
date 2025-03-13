@@ -3,12 +3,13 @@ import 'database_repository.dart';
 import 'task.dart';
 
 class MockDatabase implements DatabaseRepository {
-  final List<Task> _tasks = []; // In-Memory-Datenbank als Liste
-  int _nextId = 1; // Automatische ID-Vergabe
+  final List<Task> _tasks = [];
+  int _nextId = 1;
 
   @override
   Future<Task> insertTask(Task task) async {
-    int id = task.id ?? _nextId++; // ID zuweisen, falls keine vorhanden
+    await Future.delayed(Duration(seconds: 1));
+    int id = task.id ?? _nextId++;
     Task newTask = Task(
       id: id,
       title: task.title,
@@ -16,22 +17,24 @@ class MockDatabase implements DatabaseRepository {
       isCompleted: task.isCompleted,
     );
     _tasks.add(newTask);
-    return newTask; // Rückgabe der eingefügten Aufgabe mit ID
+    return newTask;
   }
 
   @override
   Future<List<Task>> getTasks() async {
-    return _tasks; // Rückgabe aller Aufgaben
+    await Future.delayed(Duration(seconds: 2));
+    return _tasks;
   }
 
   @override
   Future<void> updateTask(Task task) async {
+    await Future.delayed(Duration(seconds: 1));
     if (task.id == null) {
-      throw Exception('ID wird fürs Aktualisieren benötigt');
+      throw Exception('Ohne ID kann die Aufgabe nicht aktualisiert werden');
     }
     int index = _tasks.indexWhere((t) => t.id == task.id);
     if (index != -1) {
-      _tasks[index] = task; // Aufgabe ersetzen
+      _tasks[index] = task;
     } else {
       throw Exception('Task nicht gefunden');
     }
@@ -39,6 +42,7 @@ class MockDatabase implements DatabaseRepository {
 
   @override
   Future<void> deleteTask(int id) async {
-    _tasks.removeWhere((t) => t.id == id); // Aufgabe mit ID löschen
+    await Future.delayed(Duration(seconds: 3));
+    _tasks.removeWhere((t) => t.id == id);
   }
 }
